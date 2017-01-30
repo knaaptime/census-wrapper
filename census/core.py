@@ -8,6 +8,7 @@ ALL = '*'
 ENDPOINT_URL = 'http://api.census.gov/data/%s/%s'
 DEFINITIONS = {
     'acs5': {
+        '2015': 'http://api.census.gov/data/2015/acs5/variables.json',
         '2014': 'http://api.census.gov/data/2014/acs5/variables.json',
         '2013': 'http://api.census.gov/data/2013/acs5/variables.json',
         '2012': 'http://api.census.gov/data/2012/acs5/variables.json',
@@ -239,27 +240,27 @@ class ACS5Client(Client):
 
 
 class ACS5DpClient(Client):
-    
+
     default_year = 2014
     dataset = 'acs5/profile'
-    
+
     @supported_years(2014, 2013, 2012, 2011, 2010)
     def us(self, fields, **kwargs):
         return self.get(fields, geo={'for': 'us:1'}, **kwargs)
-    
+
     @supported_years(2014, 2013, 2012, 2011, 2010)
     def state(self, fields, state_fips, **kwargs):
         return self.get(fields, geo={
                         'for': 'state:{}'.format(state_fips),
                         }, **kwargs)
-    
+
     @supported_years(2014, 2013, 2012, 2011, 2010)
     def state_county(self, fields, state_fips, county_fips, **kwargs):
         return self.get(fields, geo={
                         'for': 'county:{}'.format(county_fips),
                         'in': 'state:{}'.format(state_fips),
                         }, **kwargs)
-    
+
     @supported_years(2014, 2013, 2012, 2011, 2010)
     def state_county_subdivision(self, fields, state_fips,
                                  county_fips, subdiv_fips, **kwargs):
@@ -267,7 +268,7 @@ class ACS5DpClient(Client):
                         'for': 'county subdivision:{}'.format(subdiv_fips),
                         'in': 'state:{} county:{}'.format(state_fips, county_fips),
                         }, **kwargs)
-    
+
     @supported_years(2014, 2013, 2012, 2011, 2010)
     def state_county_tract(self, fields, state_fips,
                            county_fips, tract, **kwargs):
@@ -275,7 +276,7 @@ class ACS5DpClient(Client):
                         'for': 'tract:{}'.format(tract),
                         'in': 'state:{} county:{}'.format(state_fips, county_fips),
                         }, **kwargs)
-    
+
     @supported_years(2014, 2013, 2012, 2011, 2010)
     def state_county_blockgroup(self, fields, state_fips, county_fips,
                                 blockgroup, tract=None, **kwargs):
@@ -286,21 +287,21 @@ class ACS5DpClient(Client):
         if tract:
             geo['in'] += ' tract:{}'.format(tract)
         return self.get(fields, geo=geo, **kwargs)
-    
+
     @supported_years(2014, 2013, 2012, 2011, 2010)
     def state_place(self, fields, state_fips, place, **kwargs):
         return self.get(fields, geo={
                         'for': 'place:{}'.format(place),
                         'in': 'state:{}'.format(state_fips),
                         }, **kwargs)
-    
+
     @supported_years(2014, 2013, 2012, 2011, 2010)
     def state_district(self, fields, state_fips, district, **kwargs):
         return self.get(fields, geo={
                         'for': 'congressional district:{}'.format(district),
                         'in': 'state:{}'.format(state_fips),
                         }, **kwargs)
-    
+
     @supported_years(2014, 2013, 2012, 2011)
     def zipcode(self, fields, zcta, **kwargs):
         return self.get(fields, geo={
